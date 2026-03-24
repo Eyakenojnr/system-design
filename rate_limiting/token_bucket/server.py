@@ -16,7 +16,7 @@ class TokenBucket:
         """
         self.capacity = capacity
         self.refill_rate = refill_rate_per_sec
-        self.current_tokens = capacity  # Bucket starts full
+        self.bucket_tokens = capacity  # Bucket starts full
         self.last_refill_time = time.time()
         self.lock = threading.Lock()    # Lock for thread safety
 
@@ -33,7 +33,7 @@ class TokenBucket:
 
         if tokens_to_add > 0:
             # Add tokens to bucket but don't exceed max capacity
-            self.current_tokens = min(self.capacity, self.current_tokens + tokens_to_add)
+            self.bucket_tokens = min(self.capacity, self.bucket_tokens + tokens_to_add)
             self.last_refill_time = now
 
 
@@ -49,8 +49,8 @@ class TokenBucket:
         with self.lock: # Acquire lock before checking/modifying state
             self._refill()  # Refill bucket first based on elapsed time
 
-            if self.current_tokens >= tokens_needed:
-                self.current_tokens -= tokens_needed
+            if self.bucket_tokens >= tokens_needed:
+                self.bucket_tokens -= tokens_needed
                 return True
             return False
 
