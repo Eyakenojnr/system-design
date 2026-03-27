@@ -17,7 +17,7 @@ def get_rate_limiter(user_id):
             # user_buckets[user_id] = TokenBucket(capacity=5, refill_rate_per_sec=1)
             user_buckets[user_id] = LeakingBucket(capacity=5, leak_rate_per_sec=1)
 
-            return user_buckets[user_id]
+        return user_buckets[user_id]
         
 # API Endpoint
 @app.route('/api/data', methods=['GET'])
